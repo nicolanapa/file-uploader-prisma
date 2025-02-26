@@ -1,0 +1,6 @@
+{
+    "tabWidth": 4,
+    "printWidth": 80,
+    "endOfLine": "crlf",
+    "plugins": ["prettier-plugin-ejs", "prettier-plugin-prisma"]
+}
