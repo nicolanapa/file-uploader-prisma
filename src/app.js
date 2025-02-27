@@ -6,6 +6,7 @@ import session from "express-session";
 import passport from "./db/passport.js";
 import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 import { PrismaClient } from "@prisma/client";
+import loginRouter from "./routes/loginRouter.js";
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -40,5 +41,7 @@ app.use(express.static(path.join(__dirname + "/scripts")));
 app.get("/", (req, res) => {
     res.send();
 });
+
+app.use("/login", loginRouter);
 
 app.listen(PORT);
