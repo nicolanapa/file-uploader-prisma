@@ -22,7 +22,7 @@ passport.use(
             return done(null, false);
         }
 
-        if (!argon2.verify(user.hashedPassword, password)) {
+        if (!(await argon2.verify(user.hashedPassword, password))) {
             return done(null, false);
         }
 
@@ -36,7 +36,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) => {
     try {
-        const user = prisma.user.findUnique({ where: { id: id } });
+        const user = await prisma.user.findUnique({ where: { id: id } });
 
         done(null, user);
     } catch (err) {
