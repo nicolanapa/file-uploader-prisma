@@ -3,13 +3,14 @@ import process from "process";
 import url from "url";
 import path from "path";
 import session from "express-session";
-import passport from "passport";
+import passport from "./db/passport.js";
 import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 import { PrismaClient } from "@prisma/client";
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PORT = process.env.PORT || 3000;
+export const prisma = new PrismaClient();
 
 const app = express();
 
@@ -18,7 +19,7 @@ app.set("view engine", "ejs");
 
 app.use(
     session({
-        store: new PrismaSessionStore(new PrismaClient(), {
+        store: new PrismaSessionStore(prisma, {
             checkPeriod: 2 * 60 * 1000,
             dbRecordIdIsSessionId: true,
             dbRecordIdFunction: undefined,
