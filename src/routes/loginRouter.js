@@ -6,7 +6,7 @@ import passport from "../db/passport.js";
 const loginRouter = new Router();
 
 loginRouter.get("/", (req, res) => {
-    res.status(200).render("./login");
+    res.status(200).render("./login", { user: req.user });
 });
 
 loginRouter.post(
