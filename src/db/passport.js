@@ -5,13 +5,13 @@ import * as argon2 from "argon2";
 
 const customFields = {
     usernameField: "username",
-    passwordField: "hashedPassword",
+    passwordField: "password",
 };
 
 passport.use(
     new LocalStrategy(customFields, async (username, password, done) => {
-        const user = prisma.user.findUnique({
-            data: {
+        const user = await prisma.user.findUnique({
+            where: {
                 username: username,
             },
         });
@@ -30,4 +30,17 @@ passport.use(
     }),
 );
 
+passport.serializeUser((user, done) => {
+    done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+    try {
+        const user = prisma.user.findUnique({ where: { id: id } });
+
+        done(null, user);
+    } catch (err) {
+        done(err);
+    }
+});
 export default passport;
