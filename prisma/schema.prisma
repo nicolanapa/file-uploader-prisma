@@ -19,3 +19,20 @@ model User {
     username       String @unique
     hashedPassword String
 }
+
+model File {
+    id                    Int               @id @default(autoincrement())
+    destinationOfFilename String            @default("./drive")
+    filename              String            @unique
+    FileInformation       FileInformation[]
+}
+
+model FileInformation {
+    id     Int  @id @default(autoincrement())
+    file   File @relation(fields: [fileId], references: [id])
+    fileId Int
+
+    originalFilename String
+    sizeInBytes      Int      @default(0)
+    uploadTime       DateTime @default(now())
+}
