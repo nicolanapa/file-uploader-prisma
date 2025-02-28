@@ -8,6 +8,7 @@ import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 import { PrismaClient } from "@prisma/client";
 import loginRouter from "./routes/loginRouter.js";
 import uploadRouter from "./routes/uploadRouter.js";
+import directoryRouter from "./routes/directoryRouter.js";
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -46,5 +47,7 @@ app.get("/", (req, res) => {
 app.use("/login", loginRouter);
 
 app.use("/upload", uploadRouter);
+
+app.use("/directory", directoryRouter);
 
 app.listen(PORT);
