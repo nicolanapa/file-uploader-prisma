@@ -7,6 +7,7 @@ import passport from "./db/passport.js";
 import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 import { PrismaClient } from "@prisma/client";
 import loginRouter from "./routes/loginRouter.js";
+import uploadRouter from "./routes/uploadRouter.js";
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -39,9 +40,11 @@ app.use(express.static(path.join(__dirname + "/styles")));
 app.use(express.static(path.join(__dirname + "/scripts")));
 
 app.get("/", (req, res) => {
-    res.send();
+    res.status(200).render("./home");
 });
 
 app.use("/login", loginRouter);
+
+app.use("/upload", uploadRouter);
 
 app.listen(PORT);
