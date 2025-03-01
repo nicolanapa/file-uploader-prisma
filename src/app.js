@@ -42,7 +42,11 @@ app.use(express.static(path.join(__dirname + "/scripts")));
 
 app.get("/", async (req, res) => {
     const directories = await prisma.directory.findMany();
-    const files = await prisma.file.findMany();
+    const files = await prisma.file.findMany({
+        include: {
+            fileInformation: true,
+        },
+    });
 
     console.log(directories, "\n", files);
 

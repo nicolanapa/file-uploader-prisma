@@ -13,7 +13,7 @@ uploadRouter.post("/", upload.single("uploadedFile"), async (req, res) => {
     const file = await prisma.file.create({
         data: {
             filename: req.file.filename,
-            FileInformation: {
+            fileInformation: {
                 create: {
                     originalFilename: req.file.originalname,
                     sizeInBytes: req.file.size,

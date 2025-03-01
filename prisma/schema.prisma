@@ -24,7 +24,7 @@ model File {
     id                    Int              @id @default(autoincrement())
     destinationOfFilename String           @default("./drive")
     filename              String           @unique
-    FileInformation       FileInformation?
+    fileInformation       FileInformation?
 }
 
 model FileInformation {
