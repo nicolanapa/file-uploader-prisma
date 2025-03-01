@@ -8,5 +8,20 @@
     <body>
         <%- include("./partials/upload") %>
         <%- include("./partials/createDirectory") %>
+
+        <% if (locals.directories.length !== 0) { %>
+        <% for (let i = 0; i < directories.length; i++) { %>
+        <%- include("./partials/directory", { directory: directories[i] }) %>
+        <% } %>
+        <% } else { %>
+        <h3>No directories yet! Create some!</h3>
+        <% } %>
+        <% if (locals.files.length !== 0) { %>
+        <% for (let i = 0; i < files.length; i++) { %>
+        <%- include("./partials/file", { file: files[i] }) %>
+        <% } %>
+        <% } else { %>
+        <h3>No files yet! Upload some!</h3>
+        <% } %>
     </body>
 </html>
