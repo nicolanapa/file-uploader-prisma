@@ -40,8 +40,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname + "/styles")));
 app.use(express.static(path.join(__dirname + "/scripts")));
 
-app.get("/", (req, res) => {
-    res.status(200).render("./home");
+app.get("/", async (req, res) => {
+    const directories = await prisma.directory.findMany();
+    const files = await prisma.file.findMany();
+
+    console.log(directories, "\n", files);
+
+    res.status(200).render("./home", {
+        directories: directories ? directories : [],
+        files: files ? files : [],
+    });
 });
 
 app.use("/login", loginRouter);
