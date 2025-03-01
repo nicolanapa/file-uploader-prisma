@@ -21,16 +21,16 @@ model User {
 }
 
 model File {
-    id                    Int               @id @default(autoincrement())
-    destinationOfFilename String            @default("./drive")
-    filename              String            @unique
-    FileInformation       FileInformation[]
+    id                    Int              @id @default(autoincrement())
+    destinationOfFilename String           @default("./drive")
+    filename              String           @unique
+    FileInformation       FileInformation?
 }
 
 model FileInformation {
     id     Int  @id @default(autoincrement())
     file   File @relation(fields: [fileId], references: [id])
-    fileId Int
+    fileId Int  @unique
 
     originalFilename String
     sizeInBytes      BigInt   @default(0)
