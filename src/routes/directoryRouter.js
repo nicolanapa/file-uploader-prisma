@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { body, validationResult } from "express-validator";
 import * as fs from "node:fs/promises";
+import { prisma } from "../app.js";
 
 const validateFolderName = [
     body("directoryName")
@@ -25,7 +26,7 @@ directoryRouter.post("/", validateFolderName, async (req, res) => {
     console.log(req.body);
 
     if ((await fs.access("./drive")) === undefined) {
-        console.log("drive");
+        console.log("drive", req.path);
 
         const errors = validationResult(req);
 
@@ -35,9 +36,29 @@ directoryRouter.post("/", validateFolderName, async (req, res) => {
             return res.status(400).redirect("/");
         }
 
+        let path = "./drive/" + req.body.directoryName;
+
+        if (
+            (await prisma.directory.findUnique({
+                where: {
+                    path: path,
+                },
+            })) !== null
+        ) {
+            return res.redirect("/directory/" + req.body.directoryName);
+        }
+
         try {
-            await fs.mkdir("./drive/" + req.body.directoryName, {
+            await fs.mkdir(path, {
                 recursive: true,
+            });
+
+            console.log(path);
+
+            await prisma.directory.create({
+                data: {
+                    path: path,
+                },
             });
         } catch (err) {
             console.log(err);
@@ -48,6 +69,10 @@ directoryRouter.post("/", validateFolderName, async (req, res) => {
 
     // res.status(200).send();
     res.redirect("/");
+});
+
+directoryRouter.use((req, res) => {
+    console.log("drive", req.path);
 });
 
 export default directoryRouter;
