@@ -23,6 +23,8 @@ uploadRouter.post("/", upload.single("uploadedFile"), async (req, res) => {
     });
 
     console.log(file);
+
+    res.redirect("/");
 });
 
 export default uploadRouter;
