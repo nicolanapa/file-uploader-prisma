@@ -33,6 +33,11 @@ model FileInformation {
     fileId Int
 
     originalFilename String
-    sizeInBytes      BigInt      @default(0)
+    sizeInBytes      BigInt   @default(0)
     uploadTime       DateTime @default(now())
+}
+
+model Directory {
+    id   Int    @id @default(autoincrement())
+    path String @unique
 }
