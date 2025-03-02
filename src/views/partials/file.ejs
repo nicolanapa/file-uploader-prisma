@@ -3,6 +3,13 @@
         <%= String(file.fileInformation.originalFilename) %>
     </h4>
     <p>
-        <small>(<%= file.destinationOfFilename + "/" + file.filename %>)</small>
+        <small
+            >(<%= file.fileInformation.destinationOfFilename + "/" + file.filename %>)</small
+        >
+    </p>
+    <p>
+        <small
+            >(<%= file.fileInformation.destinationOfFilename + "/" + file.fileInformation.originalFilename %>)</small
+        >
     </p>
 </div>
