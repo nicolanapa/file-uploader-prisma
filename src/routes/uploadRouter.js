@@ -1,5 +1,6 @@
 import { Router } from "express";
 import multer from "multer";
+import * as fs from "node:fs/promises";
 import { prisma } from "../app.js";
 
 const upload = multer({ dest: "./drive" });
@@ -9,6 +10,23 @@ const uploadRouter = new Router();
 uploadRouter.post("/", upload.single("uploadedFile"), async (req, res) => {
     // console.log(req.body);
     console.log(req.file);
+
+    const fileDoesExist = await prisma.fileInformation.findUnique({
+        where: {
+            destinationFilename: {
+                destinationOfFilename: "./drive",
+                originalFilename: req.file.originalname,
+            },
+        },
+    });
+
+    if (fileDoesExist !== null) {
+        await fs.rm(req.file.destination + "/" + req.file.filename);
+
+        return res.redirect("/");
+    }
+
+    console.log("Creating table record for file uploaded...");
 
     const file = await prisma.file.create({
         data: {
