@@ -22,7 +22,7 @@ model User {
 
 model File {
     id              Int              @id @default(autoincrement())
-    filename        String
+    filename        String           @unique
     fileInformation FileInformation?
 }
 
@@ -36,7 +36,7 @@ model FileInformation {
     sizeInBytes           BigInt   @default(0)
     uploadTime            DateTime @default(now())
 
-    @@unique([destinationOfFilename, originalFilename])
+    @@unique(name: "destinationFilename", [destinationOfFilename, originalFilename])
 }
 
 model Directory {
