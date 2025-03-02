@@ -21,10 +21,9 @@ model User {
 }
 
 model File {
-    id                    Int              @id @default(autoincrement())
-    destinationOfFilename String           @default("./drive")
-    filename              String           @unique
-    fileInformation       FileInformation?
+    id              Int              @id @default(autoincrement())
+    filename        String
+    fileInformation FileInformation?
 }
 
 model FileInformation {
@@ -32,9 +31,12 @@ model FileInformation {
     file   File @relation(fields: [fileId], references: [id])
     fileId Int  @unique
 
-    originalFilename String
-    sizeInBytes      BigInt   @default(0)
-    uploadTime       DateTime @default(now())
+    destinationOfFilename String   @default("./drive")
+    originalFilename      String
+    sizeInBytes           BigInt   @default(0)
+    uploadTime            DateTime @default(now())
+
+    @@unique([destinationOfFilename, originalFilename])
 }
 
 model Directory {
