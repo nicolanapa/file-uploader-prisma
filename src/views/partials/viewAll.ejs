@@ -1,0 +1,17 @@
+<%- include("./upload", { path: locals.path }) %>
+<%- include("./createDirectory", { path: locals.path }) %>
+
+<% if (locals.directories.length !== 0) { %>
+<% for (let i = 0; i < directories.length; i++) { %>
+<%- include("./directory", { directory: directories[i] }) %>
+<% } %>
+<% } else { %>
+<h3>No directories yet! Create some!</h3>
+<% } %>
+<% if (locals.files.length !== 0) { %>
+<% for (let i = 0; i < files.length; i++) { %>
+<%- include("./file", { file: files[i] }) %>
+<% } %>
+<% } else { %>
+<h3>No files yet! Upload some!</h3>
+<% } %>
