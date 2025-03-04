@@ -9,6 +9,7 @@ import { PrismaClient } from "@prisma/client";
 import loginRouter from "./routes/loginRouter.js";
 import uploadRouter from "./routes/uploadRouter.js";
 import directoryRouter from "./routes/directoryRouter.js";
+import fileRouter from "./routes/fileRouter.js";
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -62,5 +63,7 @@ app.use("/login", loginRouter);
 app.use("/upload", uploadRouter);
 
 app.use("/directory", directoryRouter);
+
+app.use("/file", fileRouter);
 
 app.listen(PORT);
