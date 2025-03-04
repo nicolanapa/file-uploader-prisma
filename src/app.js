@@ -53,7 +53,7 @@ app.get("/", async (req, res) => {
     res.status(200).render("./home", {
         directories: directories ? directories : [],
         files: files ? files : [],
-        path: "./drive/"
+        path: "./drive",
     });
 });
 
