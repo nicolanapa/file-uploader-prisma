@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Home</title>
+    </head>
+    <body>
+        <%- include("./partials/file", { file: locals.file }) %>
+
+        <% if (locals.file.fileInformation.sizeInBytes) { %>
+        <% let tempSize = BigInt(file.fileInformation.sizeInBytes); %>
+        <% let i = 0; %>
+        <% let units = ["B", "KB", "MB", "GB", "TB", "PB", "EB"]; %>
+
+        <% while (tempSize / BigInt(1024) >= 1) { %>
+        <% tempSize /= BigInt(1024); %>
+        <% i++; %>
+        <% } %>
+
+        <p><%= tempSize %> <%= units[i] %></p>
+        <% } %>
+
+        <p><%= new Date(locals.file.fileInformation.uploadTime).toLocaleString() %></p>
+    </body>
+</html>
