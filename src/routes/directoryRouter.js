@@ -71,8 +71,50 @@ directoryRouter.post("/", validateFolderName, async (req, res) => {
     res.redirect("/");
 });
 
-directoryRouter.use((req, res) => {
-    console.log("drive", req.path);
+directoryRouter.get("/:uniqueIdentifier", async (req, res) => {
+    console.log("drive", req.params.uniqueIdentifier);
+
+    const directory = await prisma.directory.findUnique({
+        where: {
+            uniqueIdentifier: req.params.uniqueIdentifier,
+        },
+    });
+
+    console.log(directory);
+
+    if (directory === null) {
+        return res.redirect("/");
+    }
+
+    const directoriesInDirectory = await prisma.directory.findMany({
+        where: {
+            path: { startsWith: directory.path },
+            NOT: {
+                path: {
+                    equals: directory.path,
+                },
+            },
+        },
+    });
+
+    const filesInDirectory = await prisma.file.findMany({
+        where: {
+            fileInformation: {
+                destinationOfFilename: directory.path,
+            },
+        },
+        include: {
+            fileInformation: true,
+        },
+    });
+
+    console.log(filesInDirectory);
+
+    res.status(200).render("./home", {
+        directories: directoriesInDirectory ? directoriesInDirectory : [],
+        files: filesInDirectory ? filesInDirectory : [],
+        path: directory.path,
+    });
 });
 
 export default directoryRouter;
