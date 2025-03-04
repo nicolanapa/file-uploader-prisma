@@ -14,6 +14,11 @@ const validateFolderName = [
         .not()
         .contains(".")
         .withMessage("No . symbols are allowed"),
+    body("path")
+        .trim()
+        .default("./drive")
+        .contains("./drive")
+        .withMessage("Wrong path"),
 ];
 
 const directoryRouter = new Router();
@@ -25,50 +30,52 @@ const directoryRouter = new Router();
 directoryRouter.post("/", validateFolderName, async (req, res) => {
     console.log(req.body);
 
-    if ((await fs.access("./drive")) === undefined) {
-        console.log("drive", req.path);
-
-        const errors = validationResult(req);
-
-        console.log(errors.array());
-
-        if (!errors.isEmpty()) {
-            return res.status(400).redirect("/");
-        }
-
-        let path = "./drive/" + req.body.directoryName;
-
-        if (
-            (await prisma.directory.findUnique({
-                where: {
-                    path: path,
-                },
-            })) !== null
-        ) {
-            return res.redirect("/directory/" + req.body.directoryName);
-        }
-
-        try {
-            await fs.mkdir(path, {
-                recursive: true,
-            });
-
-            console.log(path);
-
-            await prisma.directory.create({
-                data: {
-                    path: path,
-                },
-            });
-        } catch (err) {
-            console.log(err);
-        }
-    } else {
+    if ((await fs.access("./drive")) !== undefined) {
         return res.status(504).send();
     }
 
-    // res.status(200).send();
-    res.redirect("/");
+    console.log("drive", req.path);
+
+    const errors = validationResult(req);
+
+    console.log(errors.array());
+
+    if (!errors.isEmpty()) {
+        return res.status(400).redirect("/");
+    }
+
+    let path = req.body.path + "/" + req.body.directoryName;
+    console.log(path);
+
+    if (
+        (await prisma.directory.findUnique({
+            where: {
+                path: path,
+            },
+        })) !== null
+    ) {
+        return res.redirect("/directory/" + req.body.directoryName);
+    }
+
+    try {
+        await fs.mkdir(path, {
+            recursive: true,
+        });
+
+        console.log(path);
+
+        const directory = await prisma.directory.create({
+            data: {
+                path: path,
+            },
+        });
+
+        return res.redirect("/directory/" + directory.uniqueIdentifier);
+    } catch (err) {
+        console.log(err);
+
+        res.redirect("/");
+    }
 });
 
 directoryRouter.get("/:uniqueIdentifier", async (req, res) => {
