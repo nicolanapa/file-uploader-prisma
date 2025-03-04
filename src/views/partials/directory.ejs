@@ -1,8 +1,14 @@
 <div>
     <h4>
-        <%= String(directory.path).substring(String(directory.path).lastIndexOf("/") + 1) %>
+        <a href="/directory/<%= directory.uniqueIdentifier %>">
+            <%=
+            String(directory.path).substring(String(directory.path).lastIndexOf("/")
+            + 1) %></a
+        >
     </h4>
     <p>
-        <small>(<%= directory.path %>) or (<%= directory.uniqueIdentifier %>)</small>
+        <small
+            >(<%= directory.path %>) or (<%= directory.uniqueIdentifier %>)</small
+        >
     </p>
 </div>

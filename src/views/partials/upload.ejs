@@ -2,7 +2,7 @@
     <label for="uploaded-file">Upload something</label>
     <input type="file" name="uploadedFile" id="uploaded-file" />
     
-    <input type="hidden" name="path" value="<%= locals.path ? locals.path : "./drive" %>" />
+    <input type="hidden" name="path" value="<%= locals.path ? locals.path : "./drive" %>" readonly />
     
     <button type="submit">Upload</button>
 </form>

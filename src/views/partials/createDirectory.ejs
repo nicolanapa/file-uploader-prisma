@@ -2,7 +2,7 @@
     <label for="directory-name">New Folder: </label>
     <input type="text" name="directoryName" id="directory-name" />
 
-    <input type="hidden" name="path" value="<%= locals.path ? locals.path : "./drive" %>" />
+    <input type="hidden" name="path"  value="<%= locals.path ? locals.path : "./drive" %>" readonly />
     
     <button type="submit">Create</button>
 </form>

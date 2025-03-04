@@ -1,6 +1,8 @@
 <div>
     <h4>
-        <%= String(file.fileInformation.originalFilename) %>
+        <a href="/file/<%= file.filename %>">
+            <%= String(file.fileInformation.originalFilename) %></a
+        >
     </h4>
     <p>
         <small
