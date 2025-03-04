@@ -14,7 +14,7 @@ uploadRouter.post("/", upload.single("uploadedFile"), async (req, res) => {
     const fileDoesExist = await prisma.fileInformation.findUnique({
         where: {
             destinationFilename: {
-                destinationOfFilename: "./drive",
+                destinationOfFilename: req.body.path,
                 originalFilename: req.file.originalname,
             },
         },
@@ -26,6 +26,13 @@ uploadRouter.post("/", upload.single("uploadedFile"), async (req, res) => {
         return res.redirect("/");
     }
 
+    if (req.body.path !== "./drive") {
+        await fs.rename(
+            "./drive/" + req.file.filename,
+            req.body.path + "/" + req.file.filename,
+        );
+    }
+
     console.log("Creating table record for file uploaded...");
 
     const file = await prisma.file.create({
@@ -33,6 +40,7 @@ uploadRouter.post("/", upload.single("uploadedFile"), async (req, res) => {
             filename: req.file.filename,
             fileInformation: {
                 create: {
+                    destinationOfFilename: req.body.path,
                     originalFilename: req.file.originalname,
                     sizeInBytes: req.file.size,
                 },
