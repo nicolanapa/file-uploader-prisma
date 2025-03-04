@@ -42,5 +42,5 @@ model FileInformation {
 model Directory {
     id               Int    @id @default(autoincrement())
     path             String @unique
-    uniqueIdentifier String @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    uniqueIdentifier String @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 }
