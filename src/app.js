@@ -42,6 +42,12 @@ app.use(express.static(path.join(__dirname + "/styles")));
 app.use(express.static(path.join(__dirname + "/scripts")));
 
 app.get("/", async (req, res) => {
+    if (!req.isAuthenticated()) {
+        console.log("Not authenticated");
+        
+        return res.redirect("/login");
+    }
+
     const directories = await prisma.directory.findMany();
     const files = await prisma.file.findMany({
         include: {

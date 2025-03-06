@@ -8,6 +8,12 @@ const upload = multer({ dest: "./drive" });
 const uploadRouter = new Router();
 
 uploadRouter.post("/", upload.single("uploadedFile"), async (req, res) => {
+    if (!req.isAuthenticated()) {
+        console.log("Not authenticated");
+        
+        return res.redirect("/login");
+    }
+
     // console.log(req.body);
     console.log(req.file);
 

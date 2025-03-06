@@ -28,6 +28,12 @@ const directoryRouter = new Router();
 });*/
 
 directoryRouter.post("/", validateFolderName, async (req, res) => {
+    if (!req.isAuthenticated()) {
+        console.log("Not authenticated");
+        
+        return res.redirect("/login");
+    }
+
     console.log(req.body);
 
     if ((await fs.access("./drive")) !== undefined) {
@@ -79,6 +85,12 @@ directoryRouter.post("/", validateFolderName, async (req, res) => {
 });
 
 directoryRouter.get("/:uniqueIdentifier", async (req, res) => {
+    if (!req.isAuthenticated()) {
+        console.log("Not authenticated");
+        
+        return res.redirect("/login");
+    }
+
     console.log("drive", req.params.uniqueIdentifier);
 
     const directory = await prisma.directory.findUnique({
