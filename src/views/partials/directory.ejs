@@ -13,5 +13,20 @@
         >
     </p>
 
-    
+    <div>
+        <form
+            action="/directory/<%= directory.uniqueIdentifier %>/rename"
+            method="POST"
+        >
+            <label for="rename">Rename</label
+            ><input type="text" id="rename" name="directoryName" />
+            <button type="submit">Rename Directory</button>
+        </form>
+        <form
+            action="/directory/<%= directory.uniqueIdentifier %>/delete"
+            method="POST"
+        >
+            <button type="submit">Delete Directory</button>
+        </form>
+    </div>
 </div>
