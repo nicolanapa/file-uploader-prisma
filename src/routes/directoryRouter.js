@@ -30,7 +30,7 @@ const directoryRouter = new Router();
 directoryRouter.post("/", validateFolderName, async (req, res) => {
     if (!req.isAuthenticated()) {
         console.log("Not authenticated");
-        
+
         return res.redirect("/login");
     }
 
@@ -87,7 +87,7 @@ directoryRouter.post("/", validateFolderName, async (req, res) => {
 directoryRouter.get("/:uniqueIdentifier", async (req, res) => {
     if (!req.isAuthenticated()) {
         console.log("Not authenticated");
-        
+
         return res.redirect("/login");
     }
 
@@ -134,6 +134,57 @@ directoryRouter.get("/:uniqueIdentifier", async (req, res) => {
         files: filesInDirectory ? filesInDirectory : [],
         path: directory.path,
     });
+});
+
+directoryRouter.post(
+    "/:uniqueIdentifier/rename",
+    validateFolderName,
+    async (req, res) => {
+        if (!req.isAuthenticated()) {
+            console.log("Not authenticated");
+
+            return res.redirect("/login");
+        }
+
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return res.status(400).redirect("/");
+        }
+
+        const directory = await prisma.directory.findUnique({
+            where: {
+                uniqueIdentifier: req.params.uniqueIdentifier,
+            },
+        });
+
+        if (directory !== null) {
+            const newPath =
+                directory.path.substring(
+                    0,
+                    directory.path.lastIndexOf("/") + 1,
+                ) + req.body.directoryName;
+
+            await fs.rename(directory.path, newPath);
+
+            await prisma.directory.update({
+                where: {
+                    uniqueIdentifier: req.params.uniqueIdentifier,
+                },
+                data: {
+                    path: newPath,
+                },
+            });
+        }
+    },
+);
+
+directoryRouter.post("/:uniqueIdentifier/delete", async (req, res) => {
+    if (!req.isAuthenticated()) {
+        console.log("Not authenticated");
+
+        return res.redirect("/login");
+    }
 });
 
 export default directoryRouter;
