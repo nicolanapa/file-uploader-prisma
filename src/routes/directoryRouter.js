@@ -36,12 +36,6 @@ directoryRouter.post("/", validateFolderName, async (req, res) => {
 
     console.log(req.body);
 
-    if ((await fs.access("./drive")) !== undefined) {
-        return res.status(504).send();
-    }
-
-    console.log("drive", req.path);
-
     const errors = validationResult(req);
 
     console.log(errors.array());
@@ -49,6 +43,14 @@ directoryRouter.post("/", validateFolderName, async (req, res) => {
     if (!errors.isEmpty()) {
         return res.status(400).redirect("/");
     }
+
+    try {
+        (await fs.access("./drive")) === undefined ? "" : "";
+    } catch {
+        await fs.mkdir("./drive");
+    }
+
+    console.log("drive", req.path);
 
     let path = req.body.path + "/" + req.body.directoryName;
     console.log(path);
@@ -175,7 +177,11 @@ directoryRouter.post(
                     path: newPath,
                 },
             });
+
+            return res.redirect("/directory/" + directory.uniqueIdentifier);
         }
+
+        res.status(404).send("Directory not found");
     },
 );
 
@@ -184,6 +190,58 @@ directoryRouter.post("/:uniqueIdentifier/delete", async (req, res) => {
         console.log("Not authenticated");
 
         return res.redirect("/login");
+    }
+
+    const directory = await prisma.directory.findUnique({
+        where: {
+            uniqueIdentifier: req.params.uniqueIdentifier,
+        },
+    });
+
+    if (directory !== null) {
+        await fs.rm(directory.path, { recursive: true, force: true });
+        
+        const filesInDirectory = await prisma.fileInformation.findMany({
+            where: {
+                destinationOfFilename: {
+                    startsWith: directory.path,
+                },
+            },
+            include: { file: true },
+        });
+
+        const directoriesInDirectory = await prisma.directory.findMany({
+            where: {
+                path: {
+                    startsWith: directory.path,
+                },
+            },
+        });
+
+        console.log(1, directory, filesInDirectory, directoriesInDirectory);
+
+        const filesId = filesInDirectory.map((file) => file.fileId);
+        const directoriesId = directoriesInDirectory.map(
+            (directory) => directory.id,
+        );
+
+        await prisma.$transaction([
+            prisma.fileInformation.deleteMany({
+                where: {
+                    fileId: { in: filesId },
+                },
+            }),
+            prisma.file.deleteMany({
+                where: {
+                    id: { in: filesId },
+                },
+            }),
+            prisma.directory.deleteMany({
+                where: {
+                    id: { in: directoriesId },
+                },
+            }),
+        ]);
     }
 });
 
