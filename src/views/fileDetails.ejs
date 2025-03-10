@@ -21,6 +21,26 @@
         <p><%= tempSize %> <%= units[i] %></p>
         <% } %>
 
-        <p><%= new Date(locals.file.fileInformation.uploadTime).toLocaleString() %></p>
+        <p>
+            <%= new
+            Date(locals.file.fileInformation.uploadTime).toLocaleString() %>
+        </p>
+
+        <div>
+            <form
+                action="/file/<%= locals.file.filename %>/rename"
+                method="POST"
+            >
+                <label for="rename">Rename</label
+                ><input type="text" id="rename" name="fileName" />
+                <button type="submit">Rename File</button>
+            </form>
+            <form
+                action="/file/<%= locals.file.filename %>/delete"
+                method="POST"
+            >
+                <button type="submit">Delete File</button>
+            </form>
+        </div>
     </body>
 </html>
