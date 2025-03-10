@@ -1,0 +1,54 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+
+* {
+    font-family: "Open Sans", sans-serif, system-ui;
+    padding: 0;
+    margin: 0;
+}
+
+a:link,
+a:visited {
+    color: brown;
+    text-decoration: none;
+}
+
+small {
+    font-size: smaller;
+    font-style: italic;
+}
+
+input:not([type="file"]) {
+    border-style: none;
+    border: 1px solid rgb(182, 182, 182);
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin: 10px 5px;
+}
+
+button {
+    background-color: whitesmoke;
+    border-style: none;
+    border-radius: 13px;
+    padding: 13px 16.5px;
+    margin: 7.5px 10px;
+}
+
+.rename-button,
+.delete-button {
+    border-style: none;
+    border-radius: 13px;
+    padding: 12.5px;
+    margin: 7.5px;
+}
+
+.rename-button {
+    background-color: rgb(202, 255, 123);
+}
+
+.delete-button {
+    background-color: #ff645cfb;
+}
+
+#rename {
+    margin-left: 17.5px;
+}
