@@ -1,17 +1,20 @@
 <div>
-    <h4>
-        <a href="/directory/<%= directory.uniqueIdentifier %>">
-            <%=
-            String(directory.path).substring(String(directory.path).lastIndexOf("/")
-            + 1) %></a
-        >
-    </h4>
+    <div>
+        <h4>
+            <a href="/directory/<%= directory.uniqueIdentifier %>">
+                <%=
+                String(directory.path).substring(String(directory.path).lastIndexOf("/")
+                + 1) %></a
+            >
+        </h4>
 
-    <p>
-        <small
-            >(<%= directory.path %>) or (<%= directory.uniqueIdentifier %>)</small
-        >
-    </p>
+        <p>
+            <small>(<%= directory.path %>)</small>
+        </p>
+        <p>
+            <small>(<%= directory.uniqueIdentifier %>)</small>
+        </p>
+    </div>
 
     <div>
         <form
@@ -20,13 +23,27 @@
         >
             <label for="rename">Rename</label
             ><input type="text" id="rename" name="directoryName" />
-            <button type="submit">Rename Directory</button>
+            <button type="submit" class="rename-button">
+                <img
+                    src="../icons/rename.svg"
+                    alt="Rename Directory"
+                    width="28px"
+                    height="auto"
+                />
+            </button>
         </form>
         <form
             action="/directory/<%= directory.uniqueIdentifier %>/delete"
             method="POST"
         >
-            <button type="submit">Delete Directory</button>
+            <button type="submit" class="delete-button">
+                <img
+                    src="../icons/delete.svg"
+                    alt="Delete Directory and its content"
+                    width="28px"
+                    height="auto"
+                />
+            </button>
         </form>
     </div>
 </div>
