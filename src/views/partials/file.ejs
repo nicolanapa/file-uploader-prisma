@@ -1,17 +1,28 @@
-<div>
-    <h4>
-        <a href="/file/<%= file.filename %>">
-            <%= String(file.fileInformation.originalFilename) %></a
-        >
-    </h4>
-    <p>
-        <small
-            >(<%= file.fileInformation.destinationOfFilename + "/" + file.filename %>)</small
-        >
-    </p>
-    <p>
-        <small
-            >(<%= file.fileInformation.destinationOfFilename + "/" + file.fileInformation.originalFilename %>)</small
-        >
-    </p>
+<div class="file-info">
+    <div>
+        <img
+            src="../../icons/filename.svg"
+            alt="File"
+            width="56px"
+            height="auto"
+        />
+        <h4>
+            <a href="/file/<%= file.filename %>">
+                <%= String(file.fileInformation.originalFilename) %></a
+            >
+        </h4>
+    </div>
+
+    <div>
+        <p>
+            <small
+                >(<%= file.fileInformation.destinationOfFilename + "/" + file.filename %>)</small
+            >
+        </p>
+        <p>
+            <small
+                >(<%= file.fileInformation.destinationOfFilename + "/" + file.fileInformation.originalFilename %>)</small
+            >
+        </p>
+    </div>
 </div>
