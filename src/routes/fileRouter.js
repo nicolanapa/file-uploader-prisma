@@ -75,6 +75,23 @@ fileRouter.post(
         if (file !== null) {
             console.log(file);
 
+            const anotherFileDoesExist =
+                await prisma.fileInformation.findUnique({
+                    where: {
+                        destinationFilename: {
+                            destinationOfFilename:
+                                file.fileInformation.destinationOfFilename,
+                            originalFilename: req.body.fileName,
+                        },
+                    },
+                });
+
+            if (anotherFileDoesExist !== null) {
+                return res
+                    .status(409)
+                    .send("File with the same file name already exists");
+            }
+
             await prisma.fileInformation.update({
                 where: {
                     fileId: file.id,
@@ -86,7 +103,11 @@ fileRouter.post(
                     originalFilename: req.body.fileName,
                 },
             });
+
+            return res.redirect("/");
         }
+
+        res.status(404).send("File not found");
     },
 );
 
