@@ -3,44 +3,87 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Home</title>
+        <title>File Details</title>
+
+        <link rel="stylesheet" href="../styles/style.css" />
+        <link rel="stylesheet" href="../styles/file.css" />
     </head>
     <body>
-        <%- include("./partials/file", { file: locals.file }) %>
+        <main class="file-details">
+            <%- include("./partials/file", { file: locals.file }) %>
 
-        <% if (locals.file.fileInformation.sizeInBytes) { %>
-        <% let tempSize = BigInt(file.fileInformation.sizeInBytes); %>
-        <% let i = 0; %>
-        <% let units = ["B", "KB", "MB", "GB", "TB", "PB", "EB"]; %>
+            <div class="size-date">
+                <div>
+                    <img
+                        src="../icons/sizeFile.svg"
+                        alt="Size of File"
+                        width="38px"
+                        height="auto"
+                    />
 
-        <% while (tempSize / BigInt(1024) >= 1) { %>
-        <% tempSize /= BigInt(1024); %>
-        <% i++; %>
-        <% } %>
+                    <% if (locals.file.fileInformation.sizeInBytes) { %>
+                    <% let
+                tempSize = BigInt(file.fileInformation.sizeInBytes); %>
+                    <% let i
+                = 0; %>
+                    <% let units = ["B", "KB", "MB", "GB", "TB", "PB",
+                "EB"]; %>
+                    <% while (tempSize / BigInt(1024) >= 1) { %>
+                    <% tempSize /= BigInt(1024); %>
+                    <% i++; %>
+                    <% } %>
 
-        <p><%= tempSize %> <%= units[i] %></p>
-        <% } %>
+                    <p><%= tempSize %> <%= units[i] %></p>
+                    <% } else { %>
+                    <p>0 B</p>
+                    <% } %>
+                </div>
 
-        <p>
-            <%= new
-            Date(locals.file.fileInformation.uploadTime).toLocaleString() %>
-        </p>
+                <div>
+                    <img
+                        src="../icons/addedDate.svg"
+                        alt="File uploaded at"
+                        width="38px"
+                        height="auto"
+                    />
+                    <p>
+                        <%= new
+                        Date(locals.file.fileInformation.uploadTime).toLocaleString()
+                        %>
+                    </p>
+                </div>
+            </div>
 
-        <div>
-            <form
-                action="/file/<%= locals.file.filename %>/rename"
-                method="POST"
-            >
-                <label for="rename">Rename</label
-                ><input type="text" id="rename" name="fileName" />
-                <button type="submit">Rename File</button>
-            </form>
-            <form
-                action="/file/<%= locals.file.filename %>/delete"
-                method="POST"
-            >
-                <button type="submit">Delete File</button>
-            </form>
-        </div>
+            <div class="rename-delete-file">
+                <form
+                    action="/file/<%= locals.file.filename %>/rename"
+                    method="POST"
+                >
+                    <label for="rename">Rename</label
+                    ><input type="text" id="rename" name="fileName" />
+                    <button type="submit" class="rename-button">
+                        <img
+                            src="../icons/rename.svg"
+                            alt="Rename File"
+                            width="28px"
+                            height="auto"
+                        />
+                    </button>
+                </form>
+                <form
+                    action="/file/<%= locals.file.filename %>/delete"
+                    method="POST"
+                >
+                    <button type="submit" class="delete-button">
+                        <img
+                            src="../icons/delete.svg"
+                            alt="Delete File"
+                            width="28px"
+                            height="auto"
+                        />
+                    </button>
+                </form>
+            </div>
+        </main>
     </body>
 </html>
