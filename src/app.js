@@ -44,7 +44,7 @@ app.use(express.static(path.join(__dirname + "/scripts")));
 app.get("/", async (req, res) => {
     if (!req.isAuthenticated()) {
         console.log("Not authenticated");
-        
+
         return res.redirect("/login");
     }
 
@@ -71,5 +71,13 @@ app.use("/upload", uploadRouter);
 app.use("/directory", directoryRouter);
 
 app.use("/file", fileRouter);
+
+app.get("/styles/:file", (req, res) => {
+    res.sendFile(__dirname + req.path);
+});
+
+app.get("/icons/:file", (req, res) => {
+    res.sendFile(__dirname + req.path);
+});
 
 app.listen(PORT);
