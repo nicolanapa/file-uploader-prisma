@@ -111,4 +111,46 @@ fileRouter.post(
     },
 );
 
+fileRouter.post("/:uniqueIdentifier/delete", async (req, res) => {
+    if (!req.isAuthenticated()) {
+        console.log("Not authenticated");
+
+        return res.redirect("/login");
+    }
+
+    const file = await prisma.file.findUnique({
+        where: {
+            filename: req.params.uniqueIdentifier,
+        },
+        include: {
+            fileInformation: true,
+        },
+    });
+
+    if (file !== null) {
+        console.log(file);
+
+        await fs.rm(
+            file.fileInformation.destinationOfFilename + "/" + file.filename,
+        );
+
+        await prisma.$transaction([
+            prisma.fileInformation.delete({
+                where: {
+                    fileId: file.id,
+                },
+            }),
+            prisma.file.delete({
+                where: {
+                    id: file.id,
+                },
+            }),
+        ]);
+
+        return res.redirect("/");
+    }
+
+    res.status(404).send("File not found");
+});
+
 export default fileRouter;
