@@ -7,7 +7,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    column-gap: 10%;
+    column-gap: 5%;
     padding: 7.5px;
     margin: 7.5px;
 }
@@ -38,4 +38,10 @@
     align-items: center;
     padding: 10px;
     margin-top: 30px;
+}
+
+.download-image {
+    border: 1px solid rgb(182, 182, 182);
+    border-radius: 15px;
+    padding: 10px;
 }
