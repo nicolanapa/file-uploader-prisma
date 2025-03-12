@@ -52,3 +52,11 @@ button {
 #rename {
     margin-left: 17.5px;
 }
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    margin: 12.5px 2px;
+}
