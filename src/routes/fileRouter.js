@@ -153,4 +153,32 @@ fileRouter.post("/:uniqueIdentifier/delete", async (req, res) => {
     res.status(404).send("File not found");
 });
 
+fileRouter.get("/:uniqueIdentifier/download", async (req, res) => {
+    if (!req.isAuthenticated()) {
+        console.log("Not authenticated");
+
+        return res.status(401).send("Not authenticated to download this file");
+    }
+
+    const file = await prisma.file.findUnique({
+        where: {
+            filename: req.params.uniqueIdentifier,
+        },
+        include: {
+            fileInformation: true,
+        },
+    });
+
+    if (file !== null) {
+        console.log(file);
+
+        return res.download(
+            file.fileInformation.destinationOfFilename + "/" + file.filename,
+            file.fileInformation.originalFilename,
+        );
+    }
+
+    res.status(404).send("File not found");
+});
+
 export default fileRouter;
