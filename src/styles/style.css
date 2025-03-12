@@ -28,7 +28,7 @@ input:not([type="file"]) {
 button {
     background-color: whitesmoke;
     border-style: none;
-    border-radius: 13px;
+    border-radius: 16px;
     padding: 13px 16.5px;
     margin: 7.5px 10px;
 }
