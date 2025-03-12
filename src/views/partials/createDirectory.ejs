@@ -1,5 +1,5 @@
 <form action="/directory" method="POST" class="center">
-    <input type="text" name="directoryName" id="directory-name" />
+    <input type="text" name="directoryName" id="directory-name" required />
 
     <input type="hidden" name="path"  value="<%= locals.path ? locals.path : "./drive" %>" readonly />
     
