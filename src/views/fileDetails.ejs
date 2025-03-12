@@ -55,6 +55,12 @@
             </div>
 
             <div class="rename-delete-file">
+                <a
+                    href="/file/<%= locals.file.filename %>/download"
+                    download="<%= file.fileInformation.originalFilename %>"
+                    ><img src="../icons/download.svg" alt="Download this file"
+                /></a>
+
                 <form
                     action="/file/<%= locals.file.filename %>/rename"
                     method="POST"
