@@ -1,0 +1,21 @@
+.directory-name {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 10px;
+}
+
+.directory-paths {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4px;
+    margin: 5px;
+}
+
+.rename-delete-directory {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    margin-bottom: 50px;
+}
