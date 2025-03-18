@@ -2,6 +2,7 @@ import { Router } from "express";
 import { prisma } from "../app.js";
 import { body, validationResult } from "express-validator";
 import * as fs from "node:fs/promises";
+import { fileHandling } from "../db/FileHandling.js";
 
 const validateFileName = [
     body("fileName")
@@ -147,7 +148,13 @@ fileRouter.post("/:uniqueIdentifier/delete", async (req, res) => {
             }),
         ]);
 
-        return res.redirect("/");
+        res.redirect("/");
+
+        if (file.cloudPublicId !== "") {
+            await fileHandling.deleteFile(file.fileInformation.cloudPublicId);
+        }
+
+        return;
     }
 
     res.status(404).send("File not found");
