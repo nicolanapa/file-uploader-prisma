@@ -2,6 +2,7 @@ import { Router } from "express";
 import multer from "multer";
 import * as fs from "node:fs/promises";
 import { prisma } from "../app.js";
+import { fileHandling } from "../db/FileHandling.js";
 
 const upload = multer({ dest: "./drive" });
 
@@ -10,7 +11,7 @@ const uploadRouter = new Router();
 uploadRouter.post("/", upload.single("uploadedFile"), async (req, res) => {
     if (!req.isAuthenticated()) {
         console.log("Not authenticated");
-        
+
         return res.redirect("/login");
     }
 
@@ -57,6 +58,23 @@ uploadRouter.post("/", upload.single("uploadedFile"), async (req, res) => {
     console.log(file);
 
     res.redirect("/");
+
+    console.log("Uploading the file to the 'Cloud'...");
+
+    const urlToFile = await fileHandling.uploadFile(
+        req.body.path + "/" + req.file.filename,
+    );
+
+    if (urlToFile !== "") {
+        await prisma.fileInformation.update({
+            where: {
+                fileId: file.id,
+            },
+            data: {
+                cloudUrl: urlToFile,
+            },
+        });
+    }
 });
 
 export default uploadRouter;
