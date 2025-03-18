@@ -53,11 +53,18 @@ uploadRouter.post("/", upload.single("uploadedFile"), async (req, res) => {
                 },
             },
         },
+        include: {
+            fileInformation: true,
+        },
     });
 
     console.log(file);
 
     res.redirect("/");
+
+    if (BigInt(file.fileInformation.sizeInBytes) > 10485760n) {
+        return;
+    }
 
     console.log("Uploading the file to the 'Cloud'...");
 
