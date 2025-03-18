@@ -2,6 +2,7 @@ import { Router } from "express";
 import { body, validationResult } from "express-validator";
 import * as fs from "node:fs/promises";
 import { prisma } from "../app.js";
+import { cloudFileHandling } from "../db/CloudFileHandling.js";
 
 const validateFolderName = [
     body("directoryName")
@@ -244,6 +245,14 @@ directoryRouter.post("/:uniqueIdentifier/delete", async (req, res) => {
         ]);
 
         res.redirect("/");
+
+        let filesPublicId = filesInDirectory.map(
+            (file) => file.cloudPublicId,
+        );
+
+        filesPublicId = filesPublicId.filter((publicId) => publicId);
+
+        cloudFileHandling.deleteFile(filesPublicId);
     }
 });
 
