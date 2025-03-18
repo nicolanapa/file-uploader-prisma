@@ -35,7 +35,8 @@ model FileInformation {
     originalFilename      String
     sizeInBytes           BigInt   @default(0)
     uploadTime            DateTime @default(now())
-    cloudUrl              String?   @default("")
+    cloudPublicId         String?  @default("")
+    cloudUrl              String?  @default("")
 
     @@unique(name: "destinationFilename", [destinationOfFilename, originalFilename])
 }
