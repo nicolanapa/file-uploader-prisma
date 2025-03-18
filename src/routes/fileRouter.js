@@ -2,7 +2,7 @@ import { Router } from "express";
 import { prisma } from "../app.js";
 import { body, validationResult } from "express-validator";
 import * as fs from "node:fs/promises";
-import { fileHandling } from "../db/FileHandling.js";
+import { cloudFileHandling } from "../db/CloudFileHandling.js";
 
 const validateFileName = [
     body("fileName")
@@ -151,7 +151,9 @@ fileRouter.post("/:uniqueIdentifier/delete", async (req, res) => {
         res.redirect("/");
 
         if (file.cloudPublicId !== "") {
-            await fileHandling.deleteFile(file.fileInformation.cloudPublicId);
+            await cloudFileHandling.deleteFile(
+                file.fileInformation.cloudPublicId,
+            );
         }
 
         return;

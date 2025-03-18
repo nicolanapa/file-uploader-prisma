@@ -2,7 +2,7 @@ import { Router } from "express";
 import multer from "multer";
 import * as fs from "node:fs/promises";
 import { prisma } from "../app.js";
-import { fileHandling } from "../db/FileHandling.js";
+import { cloudFileHandling } from "../db/CloudFileHandling.js";
 
 const upload = multer({ dest: "./drive" });
 
@@ -61,7 +61,7 @@ uploadRouter.post("/", upload.single("uploadedFile"), async (req, res) => {
 
     console.log("Uploading the file to the 'Cloud'...");
 
-    const { cloudPublicId, cloudUrl } = await fileHandling.uploadFile(
+    const { cloudPublicId, cloudUrl } = await cloudFileHandling.uploadFile(
         req.body.path + "/" + req.file.filename,
     );
 
