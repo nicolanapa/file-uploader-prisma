@@ -61,17 +61,18 @@ uploadRouter.post("/", upload.single("uploadedFile"), async (req, res) => {
 
     console.log("Uploading the file to the 'Cloud'...");
 
-    const urlToFile = await fileHandling.uploadFile(
+    const { cloudPublicId, cloudUrl } = await fileHandling.uploadFile(
         req.body.path + "/" + req.file.filename,
     );
 
-    if (urlToFile !== "") {
+    if (cloudPublicId !== "" && cloudUrl !== "") {
         await prisma.fileInformation.update({
             where: {
                 fileId: file.id,
             },
             data: {
-                cloudUrl: urlToFile,
+                cloudPublicId: cloudPublicId,
+                cloudUrl: cloudUrl,
             },
         });
     }
