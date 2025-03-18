@@ -200,7 +200,7 @@ directoryRouter.post("/:uniqueIdentifier/delete", async (req, res) => {
 
     if (directory !== null) {
         await fs.rm(directory.path, { recursive: true, force: true });
-        
+
         const filesInDirectory = await prisma.fileInformation.findMany({
             where: {
                 destinationOfFilename: {
@@ -242,6 +242,8 @@ directoryRouter.post("/:uniqueIdentifier/delete", async (req, res) => {
                 },
             }),
         ]);
+
+        res.redirect("/");
     }
 });
 
