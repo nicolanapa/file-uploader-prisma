@@ -2,6 +2,7 @@ import { Router } from "express";
 import { prisma } from "../app.js";
 import { body, validationResult } from "express-validator";
 import * as fs from "node:fs/promises";
+import https from "https";
 import { cloudFileHandling } from "../db/CloudFileHandling.js";
 
 const validateFileName = [
@@ -185,6 +186,42 @@ fileRouter.get("/:uniqueIdentifier/download", async (req, res) => {
             file.fileInformation.destinationOfFilename + "/" + file.filename,
             file.fileInformation.originalFilename,
         );
+    }
+
+    res.status(404).send("File not found");
+});
+
+fileRouter.get("/:uniqueIdentifier/download/cloud", async (req, res) => {
+    if (!req.isAuthenticated()) {
+        console.log("Not authenticated");
+
+        return res.status(401).send("Not authenticated to download this file");
+    }
+
+    const file = await prisma.file.findUnique({
+        where: {
+            filename: req.params.uniqueIdentifier,
+        },
+        include: {
+            fileInformation: true,
+        },
+    });
+
+    if (file !== null) {
+        console.log(file);
+
+        const fileDownloaded = await fetch(file.fileInformation.cloudUrl);
+
+        console.log(fileDownloaded);
+
+        return https.get(file.fileInformation.cloudUrl, (response) => {
+            res.setHeader(
+                "Content-disposition",
+                "attachment; filename=" + file.fileInformation.originalFilename,
+            );
+            res.setHeader("Content-type", "application/octet-stream");
+            response.pipe(res);
+        });
     }
 
     res.status(404).send("File not found");
