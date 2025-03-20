@@ -55,16 +55,31 @@
             </div>
 
             <div class="rename-delete-file">
-                <a
-                    href="/file/<%= locals.file.filename %>/download"
-                    download="<%= file.fileInformation.originalFilename %>"
-                    ><img
-                        src="../icons/download.svg"
-                        alt="Download this file"
-                        class="download-image"
-                        width="48px"
-                        height="auto"
-                /></a>
+                <div>
+                    <a
+                        href="/file/<%= locals.file.filename %>/download"
+                        download="<%= locals.file.fileInformation.originalFilename %>"
+                        ><img
+                            src="../icons/download.svg"
+                            alt="Download this file"
+                            class="download-image"
+                            width="48px"
+                            height="auto"
+                    /></a>
+
+                    <% if (locals.file.fileInformation.cloudUrl) { %>
+                    <a
+                        href="/file/<%= locals.file.filename %>/download/cloud"
+                        download="<%= locals.file.fileInformation.originalFilename %>"
+                        ><img
+                            src="../icons/cloudDownload.svg"
+                            alt="Download this file from the Cloud"
+                            class="download-image"
+                            width="48px"
+                            height="auto"
+                    /></a>
+                    <% }%>
+                </div>
 
                 <form
                     action="/file/<%= locals.file.filename %>/rename"
