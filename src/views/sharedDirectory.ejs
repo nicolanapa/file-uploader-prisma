@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Home</title>
+
+        <link rel="stylesheet" href="../styles/style.css" />
+        <link rel="stylesheet" href="../styles/directory.css" />
+        <link rel="stylesheet" href="../styles/file.css" />
+    </head>
+    <body>
+        <% if (locals.directories.length !== 0) { %>
+        <% for (let i = 0; i < directories.length; i++) { %>
+        <%- include("./partials/directory", { directory: directories[i], shared: true }) %>
+        <% } %>
+        <% } else { %>
+        <h3 class="center">No directories yet! Create some!</h3>
+        <% } %>
+        <% if (locals.files.length !== 0) { %>
+        <% for (let i = 0; i < files.length; i++) { %>
+        <%- include("./partials/file", { file: files[i] }) %>
+        <% } %>
+        <% } else { %>
+        <h3 class="center">No files yet! Upload some!</h3>
+        <% } %>
+    </body>
+</html>

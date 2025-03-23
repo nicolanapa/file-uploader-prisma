@@ -26,6 +26,7 @@
         </div>
     </div>
 
+    <% if (!locals.shared) { %>
     <div class="rename-delete-directory">
         <form
             action="/directory/<%= directory.uniqueIdentifier %>/rename"
@@ -60,4 +61,5 @@
             ><button>Share</button></a
         >
     </div>
+    <% } %>
 </div>
