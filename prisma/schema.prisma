@@ -42,7 +42,18 @@ model FileInformation {
 }
 
 model Directory {
-    id               Int    @id @default(autoincrement())
-    path             String @unique
-    uniqueIdentifier String @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    id               Int              @id @default(autoincrement())
+    path             String           @unique
+    uniqueIdentifier String           @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    SharedDirectory  SharedDirectory?
+}
+
+model SharedDirectory {
+    id          Int       @id @default(autoincrement())
+    directory   Directory @relation(fields: [directoryId], references: [id])
+    directoryId Int       @unique
+
+    duration  String
+    startDate DateTime
+    untilDate DateTime
 }
