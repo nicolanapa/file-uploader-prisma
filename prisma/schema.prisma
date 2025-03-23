@@ -53,7 +53,16 @@ model SharedDirectory {
     directory   Directory @relation(fields: [directoryId], references: [id])
     directoryId Int       @unique
 
-    duration  String
-    startDate DateTime
+    duration  Int
+    type      type
+    startDate DateTime @default(now())
     untilDate DateTime
+}
+
+enum type {
+    minute
+    hour
+    day
+    month
+    year
 }
