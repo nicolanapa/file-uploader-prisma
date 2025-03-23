@@ -2,6 +2,21 @@ import { Router } from "express";
 import { prisma } from "../app.js";
 import { body, validationResult } from "express-validator";
 
+const returnMs = (duration, type) => {
+    switch (type) {
+        case "minute":
+            return 60000 * duration;
+        case "hour":
+            return 3600000 * duration;
+        case "day":
+            return 86400000 * duration;
+        case "month":
+            return 2629800000 * duration;
+        case "year":
+            return 31557600000 * duration;
+    }
+};
+
 const validateDuration = [
     body("duration")
         .trim()
@@ -13,8 +28,7 @@ const validateDuration = [
         .trim()
         .notEmpty()
         .withMessage("Type must not be empty")
-        .not()
-        .isIn(["min", "hour", "day", "month", "year"])
+        .isIn(["minute", "hour", "day", "month", "year"])
         .withMessage("Wrong type"),
 ];
 
@@ -31,18 +45,17 @@ sharedRouter.get("/", async (req, res) => {
         return res.redirect("/");
     }
 
-    if (
-        await prisma.directory.findUnique({
-            where: {
-                uniqueIdentifier: req.query.directory,
-            },
-        })
-    ) {
-        return res
-            .status(200)
-            .render("./sharedForm", {
-                uniqueIdentifier: req.query.uniqueIdentifier,
-            });
+    const directory = await prisma.directory.findUnique({
+        where: {
+            uniqueIdentifier: req.query.directory,
+        },
+    });
+
+    if (directory !== null) {
+        return res.status(200).render("./sharedForm", {
+            uniqueIdentifier: req.query.directory,
+            directory: directory,
+        });
     }
 
     return res.redirect("/");
@@ -94,7 +107,7 @@ sharedRouter.get("/:sharedUniqueIdentifier", async (req, res) => {
 
     console.log(filesInDirectory);
 
-    res.status(200).render("./home", {
+    res.status(200).render("./sharedDirectory", {
         directories: directoriesInDirectory ? directoriesInDirectory : [],
         files: filesInDirectory ? filesInDirectory : [],
         path: directory.path,
@@ -123,7 +136,44 @@ sharedRouter.post("/:uniqueIdentifier", validateDuration, async (req, res) => {
     });
 
     if (directory !== null) {
-        //
+        console.log(req.body);
+
+        const directoryIsShared = await prisma.sharedDirectory.findUnique({
+            where: {
+                id: directory.id,
+            },
+        });
+
+        console.log(directoryIsShared);
+
+        let startDate = new Date();
+        let untilDate = new Date(
+            startDate.getTime() + returnMs(req.body.duration, req.body.type),
+        );
+
+        if (directoryIsShared !== null) {
+            await prisma.sharedDirectory.update({
+                where: {
+                    directoryId: directory.id,
+                },
+                data: {
+                    duration: Number.parseInt(req.body.duration),
+                    type: req.body.type,
+                    startDate: startDate,
+                    untilDate: untilDate,
+                },
+            });
+        } else {
+            await prisma.sharedDirectory.create({
+                data: {
+                    directoryId: directory.id,
+                    duration: Number.parseInt(req.body.duration),
+                    type: req.body.type,
+                    startDate: startDate,
+                    untilDate: untilDate,
+                },
+            });
+        }
     }
 
     res.status(404).send("Directory to be shared not found");
