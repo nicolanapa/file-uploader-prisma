@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Share this Directory</title>
+
+        <link rel="stylesheet" href="../styles/style.css" />
+        <link rel="stylesheet" href="../styles/directory.css" />
+        <link rel="stylesheet" href="../styles/file.css" />
+    </head>
+    <body>
+        <h1 class="directory-name">
+            Sharing Directory <%=
+            String(locals.directory.path).substring(String(locals.directory.path).lastIndexOf("/")
+            + 1) %>
+        </h1>
+
+        <form
+            action="/shared/<%= locals.uniqueIdentifier %>"
+            method="POST"
+            class="rename-delete-file"
+        >
+            <label for="duration">Insert duration:</label
+            ><input
+                type="number"
+                id="duration"
+                name="duration"
+                min="1"
+                max="1000"
+                required
+            />
+
+            <label for="type">Type:</label
+            ><select name="type" id="type" required>
+                <option value="minute">Minutes</option>
+                <option value="hour">Hours</option>
+                <option value="day" selected>Days</option>
+                <option value="month">Months</option>
+                <option value="year">Years</option>
+            </select>
+
+            <button type="submit">Share</button>
+        </form>
+    </body>
+</html>
