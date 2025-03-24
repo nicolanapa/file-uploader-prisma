@@ -1,13 +1,13 @@
 <div class="file-info">
     <div>
         <img
-            src="../../icons/filename.svg"
+            src="/icons/filename.svg"
             alt="File"
             width="56px"
             height="auto"
         />
         <h4>
-            <a href="/file/<%= file.filename %>">
+            <a href="<%= locals.shared ? "/shared" : "" %>/file/<%= file.filename %>">
                 <%= String(file.fileInformation.originalFilename) %></a
             >
         </h4>

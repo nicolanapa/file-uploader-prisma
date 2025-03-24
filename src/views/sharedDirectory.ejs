@@ -5,9 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Home</title>
 
-        <link rel="stylesheet" href="../styles/style.css" />
-        <link rel="stylesheet" href="../styles/directory.css" />
-        <link rel="stylesheet" href="../styles/file.css" />
+        <link rel="stylesheet" href="/styles/style.css" />
+        <link rel="stylesheet" href="/styles/directory.css" />
+        <link rel="stylesheet" href="/styles/file.css" />
     </head>
     <body>
         <% if (locals.directories.length !== 0) { %>
@@ -19,7 +19,7 @@
         <% } %>
         <% if (locals.files.length !== 0) { %>
         <% for (let i = 0; i < files.length; i++) { %>
-        <%- include("./partials/file", { file: files[i] }) %>
+        <%- include("./partials/file", { file: files[i], shared: true }) %>
         <% } %>
         <% } else { %>
         <h3 class="center">No files yet! Upload some!</h3>

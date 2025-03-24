@@ -5,8 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>File Details</title>
 
-        <link rel="stylesheet" href="../styles/style.css" />
-        <link rel="stylesheet" href="../styles/file.css" />
+        <link rel="stylesheet" href="/styles/style.css" />
+        <link rel="stylesheet" href="/styles/file.css" />
     </head>
     <body>
         <main class="file-details">
@@ -15,7 +15,7 @@
             <div class="size-date">
                 <div>
                     <img
-                        src="../icons/sizeFile.svg"
+                        src="/icons/sizeFile.svg"
                         alt="Size of File"
                         width="38px"
                         height="auto"
@@ -41,7 +41,7 @@
 
                 <div>
                     <img
-                        src="../icons/addedDate.svg"
+                        src="/icons/addedDate.svg"
                         alt="File uploaded at"
                         width="38px"
                         height="auto"
@@ -54,13 +54,14 @@
                 </div>
             </div>
 
+            <% if (!locals.shared) { %>
             <div class="rename-delete-file">
                 <div>
                     <a
                         href="/file/<%= locals.file.filename %>/download"
                         download="<%= locals.file.fileInformation.originalFilename %>"
                         ><img
-                            src="../icons/download.svg"
+                            src="/icons/download.svg"
                             alt="Download this file"
                             class="download-image"
                             width="48px"
@@ -72,7 +73,7 @@
                         href="/file/<%= locals.file.filename %>/download/cloud"
                         download="<%= locals.file.fileInformation.originalFilename %>"
                         ><img
-                            src="../icons/cloudDownload.svg"
+                            src="/icons/cloudDownload.svg"
                             alt="Download this file from the Cloud"
                             class="download-image"
                             width="48px"
@@ -89,7 +90,7 @@
                     ><input type="text" id="rename" name="fileName" />
                     <button type="submit" class="rename-button">
                         <img
-                            src="../icons/rename.svg"
+                            src="/icons/rename.svg"
                             alt="Rename File"
                             width="28px"
                             height="auto"
@@ -102,7 +103,7 @@
                 >
                     <button type="submit" class="delete-button">
                         <img
-                            src="../icons/delete.svg"
+                            src="/icons/delete.svg"
                             alt="Delete File"
                             width="28px"
                             height="auto"
@@ -110,6 +111,7 @@
                     </button>
                 </form>
             </div>
+            <% } %>
         </main>
     </body>
 </html>
