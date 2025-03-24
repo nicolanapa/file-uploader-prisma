@@ -61,6 +61,48 @@ sharedRouter.get("/", async (req, res) => {
     return res.redirect("/");
 });
 
+sharedRouter.get("/file/:uniqueIdentifier", async (req, res) => {
+    const file = await prisma.file.findUnique({
+        where: {
+            filename: req.params.uniqueIdentifier,
+        },
+        include: {
+            fileInformation: true,
+        },
+    });
+
+    if (file !== null) {
+        const directory = await prisma.directory.findUnique({
+            where: {
+                path: file.fileInformation.destinationOfFilename,
+            },
+        });
+
+        console.log(file, directory);
+
+        if (directory !== null) {
+            const directoryIsShared = await prisma.sharedDirectory.findUnique({
+                where: {
+                    directoryId: directory.id,
+                },
+                include: {
+                    directory: true,
+                },
+            });
+
+            console.log(directoryIsShared);
+
+            return res
+                .status(200)
+                .render("./fileDetails", { file: file, shared: true });
+        }
+    }
+
+    res.status(404).send("Shared File not existing or being shared");
+});
+
+sharedRouter.get("/directory/:uniqueIdentifier", (req, res) => {});
+
 sharedRouter.get("/:sharedUniqueIdentifier", async (req, res) => {
     console.log("shared directory id", req.params.sharedUniqueIdentifier);
 
@@ -85,10 +127,10 @@ sharedRouter.get("/:sharedUniqueIdentifier", async (req, res) => {
 
     const directoriesInDirectory = await prisma.directory.findMany({
         where: {
-            path: { startsWith: directory.path },
+            path: { startsWith: directory.directory.path },
             NOT: {
                 path: {
-                    equals: directory.path,
+                    equals: directory.directory.path,
                 },
             },
         },
@@ -97,15 +139,13 @@ sharedRouter.get("/:sharedUniqueIdentifier", async (req, res) => {
     const filesInDirectory = await prisma.file.findMany({
         where: {
             fileInformation: {
-                destinationOfFilename: directory.path,
+                destinationOfFilename: directory.directory.path,
             },
         },
         include: {
             fileInformation: true,
         },
     });
-
-    console.log(filesInDirectory);
 
     res.status(200).render("./sharedDirectory", {
         directories: directoriesInDirectory ? directoriesInDirectory : [],
