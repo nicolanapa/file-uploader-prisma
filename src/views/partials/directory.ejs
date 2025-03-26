@@ -8,7 +8,7 @@
                 height="auto"
             />
             <h4>
-                <a href="/directory/<%= directory.uniqueIdentifier %>">
+                <a href="<%= locals.shared ? "/shared" : "" %>/directory/<%= directory.uniqueIdentifier %>">
                     <%=
                     String(directory.path).substring(String(directory.path).lastIndexOf("/")
                     + 1) %></a
