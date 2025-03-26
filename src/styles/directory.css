@@ -19,3 +19,13 @@
     align-content: center;
     margin-bottom: 50px;
 }
+
+#duration,
+#type {
+    text-align: center;
+    background-color: aliceblue;
+    border: 1px solid rgb(244, 255, 254);
+    border-radius: 15px;
+    padding: 15px;
+    margin: 10px 10px 20px;
+}

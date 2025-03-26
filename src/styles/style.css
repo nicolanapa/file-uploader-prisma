@@ -60,3 +60,8 @@ button {
     padding: 5px;
     margin: 12.5px 2px;
 }
+
+.spacing {
+    margin: 30px 15px;
+    padding: 10px;
+}
