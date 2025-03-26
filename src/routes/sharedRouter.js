@@ -92,16 +92,93 @@ sharedRouter.get("/file/:uniqueIdentifier", async (req, res) => {
 
             console.log(directoryIsShared);
 
-            return res
-                .status(200)
-                .render("./fileDetails", { file: file, shared: true });
+            return res.status(200).render("./fileDetails", {
+                file: file ? file : {},
+                shared: true,
+            });
         }
     }
 
     res.status(404).send("Shared File not existing or being shared");
 });
 
-sharedRouter.get("/directory/:uniqueIdentifier", (req, res) => {});
+sharedRouter.get("/directory/:uniqueIdentifier", async (req, res) => {
+    const directory = await prisma.directory.findUnique({
+        where: {
+            uniqueIdentifier: req.params.uniqueIdentifier,
+        },
+    });
+
+    if (directory !== null) {
+        console.log(1, directory);
+
+        console.log(directory.path);
+
+        const splitedPath = String(directory.path).split("/");
+        let directoryIsShared = null;
+
+        for (let i = 2; i < splitedPath.length; i++) {
+            let currentPath = "./drive";
+
+            for (let i2 = 2; i2 < i; i2++) {
+                currentPath += "/" + splitedPath[i2];
+            }
+
+            console.log(2, currentPath);
+
+            directoryIsShared = await prisma.sharedDirectory.findFirst({
+                where: {
+                    directory: { path: { equals: currentPath } },
+                },
+                include: {
+                    directory: true,
+                },
+            });
+
+            console.log(3, directoryIsShared);
+
+            if (directoryIsShared !== null) {
+                break;
+            }
+        }
+
+        if (directoryIsShared !== null) {
+            const directories = await prisma.directory.findMany({
+                where: {
+                    path: {
+                        startsWith: directory.path,
+                    },
+                    NOT: {
+                        path: {
+                            equals: directory.path,
+                        },
+                    },
+                },
+            });
+
+            const files = await prisma.file.findMany({
+                where: {
+                    fileInformation: {
+                        destinationOfFilename: {
+                            startsWith: directory.path,
+                        },
+                    },
+                },
+                include: {
+                    fileInformation: true,
+                },
+            });
+
+            return res.status(200).render("./sharedDirectory", {
+                directories: directories ? directories : [],
+                files: files ? files : [],
+                path: directory.path,
+            });
+        }
+    }
+
+    res.status(404).send("Shared Directory not existing or being shared");
+});
 
 sharedRouter.get("/:sharedUniqueIdentifier", async (req, res) => {
     console.log("shared directory id", req.params.sharedUniqueIdentifier);
