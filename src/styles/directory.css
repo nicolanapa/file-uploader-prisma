@@ -29,3 +29,11 @@
     padding: 15px;
     margin: 10px 10px 20px;
 }
+
+.shared-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -40px;
+    margin-bottom: 40px;
+}
