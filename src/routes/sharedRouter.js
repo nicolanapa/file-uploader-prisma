@@ -204,7 +204,7 @@ sharedRouter.get("/:sharedUniqueIdentifier", async (req, res) => {
 
     const directoriesInDirectory = await prisma.directory.findMany({
         where: {
-            path: { startsWith: directory.directory.path },
+            path: { startsWith: directory.directory.path + "/" },
             NOT: {
                 path: {
                     equals: directory.directory.path,
@@ -257,7 +257,7 @@ sharedRouter.post("/:uniqueIdentifier", validateDuration, async (req, res) => {
 
         const directoryIsShared = await prisma.sharedDirectory.findUnique({
             where: {
-                id: directory.id,
+                directoryId: directory.id,
             },
         });
 
@@ -268,8 +268,12 @@ sharedRouter.post("/:uniqueIdentifier", validateDuration, async (req, res) => {
             startDate.getTime() + returnMs(req.body.duration, req.body.type),
         );
 
+        let sharedDirectory = {
+            id: 1,
+        };
+
         if (directoryIsShared !== null) {
-            await prisma.sharedDirectory.update({
+            sharedDirectory = await prisma.sharedDirectory.update({
                 where: {
                     directoryId: directory.id,
                 },
@@ -281,7 +285,7 @@ sharedRouter.post("/:uniqueIdentifier", validateDuration, async (req, res) => {
                 },
             });
         } else {
-            await prisma.sharedDirectory.create({
+            sharedDirectory = await prisma.sharedDirectory.create({
                 data: {
                     directoryId: directory.id,
                     duration: Number.parseInt(req.body.duration),
@@ -291,9 +295,43 @@ sharedRouter.post("/:uniqueIdentifier", validateDuration, async (req, res) => {
                 },
             });
         }
+
+        return res.redirect("/shared/" + sharedDirectory.id);
     }
 
     res.status(404).send("Directory to be shared not found");
+});
+
+sharedRouter.post("/:uniqueIdentifier/remove", async (req, res) => {
+    if (!req.isAuthenticated()) {
+        console.log("Not authenticated");
+
+        return res.redirect("/login");
+    }
+
+    if (!Number.isInteger(parseInt(req.params.uniqueIdentifier))) {
+        return res.status(400).send("Unique Identifier is not an Integer");
+    }
+
+    const directoryIsShared = await prisma.sharedDirectory.findUnique({
+        where: {
+            id: parseInt(req.params.uniqueIdentifier),
+        },
+    });
+
+    if (directoryIsShared !== null) {
+        console.log(directoryIsShared);
+
+        await prisma.sharedDirectory.delete({
+            where: {
+                id: parseInt(directoryIsShared.id),
+            },
+        });
+
+        return res.redirect("/");
+    }
+
+    return res.status(404).send("Shared Directory not Found");
 });
 
 export default sharedRouter;
