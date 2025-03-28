@@ -49,7 +49,11 @@ app.get("/", async (req, res) => {
         return res.redirect("/login");
     }
 
-    const directories = await prisma.directory.findMany();
+    const directories = await prisma.directory.findMany({
+        include: {
+            SharedDirectory: true,
+        },
+    });
     const files = await prisma.file.findMany({
         include: {
             fileInformation: true,

@@ -117,6 +117,9 @@ directoryRouter.get("/:uniqueIdentifier", async (req, res) => {
                 },
             },
         },
+        include: {
+            SharedDirectory: true,
+        },
     });
 
     const filesInDirectory = await prisma.file.findMany({
@@ -246,9 +249,7 @@ directoryRouter.post("/:uniqueIdentifier/delete", async (req, res) => {
 
         res.redirect("/");
 
-        let filesPublicId = filesInDirectory.map(
-            (file) => file.cloudPublicId,
-        );
+        let filesPublicId = filesInDirectory.map((file) => file.cloudPublicId);
 
         filesPublicId = filesPublicId.filter((publicId) => publicId);
 
