@@ -8,7 +8,9 @@
                 height="auto"
             />
             <h4>
-                <a href="<%= locals.shared ? "/shared" : "" %>/directory/<%= directory.uniqueIdentifier %>">
+                <a
+                    href="<%= locals.shared ? '/shared' : '' %>/directory/<%= directory.uniqueIdentifier %>"
+                >
                     <%=
                     String(directory.path).substring(String(directory.path).lastIndexOf("/")
                     + 1) %></a
@@ -57,37 +59,50 @@
             </button>
         </form>
 
-        <% if (!locals.isCurrentlyBeingShared) { %>
+        <% if (locals.directory.SharedDirectory === null) { %>
         <a href="/shared?directory=<%= directory.uniqueIdentifier %>"
-            ><button><img
-                src="/icons/share.svg"
-                alt="Share this Directory and all of its content"
-                width="22px"
-                height="auto"
-            /></button></a
-        >
+            ><button>
+                <img
+                    src="/icons/share.svg"
+                    alt="Share this Directory and all of its content"
+                    width="22px"
+                    height="auto"
+                /></button
+        ></a>
         <% } %>
     </div>
 
-    <div>
-        <% if (locals.isCurrentlyBeingShared) { %>
-            <div>
-                <a href="/shared?directory=<%= directory.uniqueIdentifier %>"
-                    ><button><img
-                        src="/icons/share.svg"
-                        alt="Change the sharing options (amount of time) of this Directory"
-                        width="22px"
-                        height="auto"
-                    /></button></a>
-                <a href="/shared/<%= directory.uniqueIdentifier %>/remove"
-                    ><button><img
-                        src="/icons/unshare.svg"
-                        alt="Stop sharing this Directory and all of its content"
-                        width="22px"
-                        height="auto"
-                    /></button></a>
-            </div>
-            <% } %>
+    <% if (locals.directory.SharedDirectory !== null) { %>
+    <div class="shared-container">
+        <a href="/shared/<%= directory.SharedDirectory.id %>"
+            ><button>Shared Link</button></a
+        >
+
+        <a href="/shared?directory=<%= directory.uniqueIdentifier %>"
+            ><button>
+                <img
+                    src="/icons/share.svg"
+                    alt="Change the sharing options (amount of time) of this Directory"
+                    width="22px"
+                    height="auto"
+                /></button
+        ></a>
+
+        <form
+            action="/shared/<%= directory.SharedDirectory.id %>/remove"
+            method="POST"
+        >
+            <button type="submit">
+                <img
+                    src="/icons/unshare.svg"
+                    alt="Stop sharing this Directory and all of its content"
+                    width="22px"
+                    height="auto"
+                />
+            </button>
+        </form>
     </div>
+    <% } %>
+
     <% } %>
 </div>
