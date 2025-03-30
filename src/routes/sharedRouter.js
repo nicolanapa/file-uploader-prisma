@@ -17,6 +17,29 @@ const returnMs = (duration, type) => {
     }
 };
 
+async function checkIfSharedDirectoryIsValid(sharedDirectory) {
+    /*console.log(
+        new Date().getTime(),
+        new Date(sharedDirectory.untilDate).getTime(),
+    );*/
+
+    if (new Date().getTime() >= new Date(sharedDirectory.untilDate).getTime()) {
+        console.log("Expired!");
+
+        await prisma.sharedDirectory.delete({
+            where: {
+                id: sharedDirectory.id,
+            },
+        });
+
+        return false;
+    } else {
+        console.log("Not Expired!");
+
+        return true;
+    }
+}
+
 const validateDuration = [
     body("duration")
         .trim()
@@ -143,6 +166,10 @@ sharedRouter.get("/directory/:uniqueIdentifier", async (req, res) => {
         }
 
         if (directoryIsShared !== null) {
+            if (!checkIfSharedDirectoryIsValid(directoryIsShared)) {
+                return res.status(404).send("Shared Directory may be expired");
+            }
+
             const directories = await prisma.directory.findMany({
                 where: {
                     path: {
@@ -200,6 +227,10 @@ sharedRouter.get("/:sharedUniqueIdentifier", async (req, res) => {
 
     if (directory === null) {
         return res.status(404).send("Shared Directory Not Found");
+    }
+
+    if (!checkIfSharedDirectoryIsValid(directory)) {
+        return res.status(404).send("Shared Directory may be expired");
     }
 
     const directoriesInDirectory = await prisma.directory.findMany({
